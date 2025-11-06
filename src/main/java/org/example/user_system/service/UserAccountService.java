@@ -1,18 +1,22 @@
 package org.example.user_system.service;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.example.user_system.model.entity.UserAccount;
+import org.example.user_system.model.repository.UserAccountRepository;
 
-import java.io.IOException;
+public class UserAccountService {
+  private final UserAccountRepository accountRepository = new UserAccountRepository();
 
-@WebServlet
-public class UserAccountService extends HttpServlet {
+  public void createUser(String username, String password) {
+    accountRepository.createUser(new UserAccount(username, password));
+  }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+  public boolean login(String username, String password) {
+    try {
+      UserAccount account = accountRepository.findByUsername(username);
+      return account.password().equals(password);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 }
